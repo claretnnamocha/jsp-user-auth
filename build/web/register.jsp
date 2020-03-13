@@ -1,18 +1,18 @@
 <%@page contentType="text/html" import="java.sql.*"%>
 <%if (request.getParameter("btn") != null) {
         Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "");
-        PreparedStatement ps = c.prepareStatement("SELECT * FROM `user` WHERE email = ? and password = ?");
+        PreparedStatement ps = c.prepareStatement("INSERT INTO `user` (`email`,`password`,`name`) VALUES (?,?,?)");
 
         ps.setString(1, request.getParameter("userEmail"));
         ps.setString(2, request.getParameter("userPass"));
-        ResultSet rs = ps.executeQuery();
-        if (!rs.next()) {
-            out.print("Login Failed!!");
+        ps.setString(3, request.getParameter("userName"));
+        int saved = ps.executeUpdate();
+        if (saved == 0) {
+            out.print("Registration Failed!!");
         } else {
-            rs.absolute(1);
-            out.println("Welcome " + rs.getString("name"));
+            out.println("Registration Successful");
         }
-}%>
+    }%>
 <!DOCTYPE hdl>
 <html lang="en">
     <head>
@@ -23,7 +23,7 @@
         <meta name="keywords" content="Jamb Practico" />
         <meta name="description" content="Jamb Practico" />
         <title>
-            Simple JSP Login
+            Simple JSP Registration
         </title>
         <link rel="stylesheet" href="./static/css/bootstrap.min.css" />
         <link
@@ -48,7 +48,7 @@
                             <h4
                                 class="d-box-header d-box-header__title text-center border-bottom mb-3 pb-3 d-black-50"
                                 >
-                                Login
+                                Register
                             </h4>
                             <div class="d-box-body">
                                 <form method="post" class="form-horizontal">
@@ -68,6 +68,28 @@
                                                 name="userEmail"
                                                 id="userEmail"
                                                 placeholder="Email"
+                                                />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="userEmail">Name:</label>
+                                        <div class="input-group clearfix">
+                                            <div class="input-group-prepend">
+                                                <div
+                                                    class="input-group-text bg-success text-white p-0 px-2"
+                                                    >
+                                                    <i
+                                                        class="icon ion-ios-person icon-x icon-w"
+                                                        ></i>
+                                                </div>
+                                            </div>
+                                            <label for="userAddress" class="sr-only">Name</label>
+                                            <input
+                                                type="text"
+                                                name="userName"
+                                                id="userName"
+                                                class="form-control"
+                                                placeholder="Full Name"
                                                 />
                                         </div>
                                     </div>
@@ -99,10 +121,10 @@
                                             class="btn btn-lg btn-block btn-success"
                                             name="btn"
                                             >
-                                            Login
+                                            Register
                                         </button>
                                     </div>
-                                    <div style="text-align: center">Don't have an account?... <a href="/user-auth/register.jsp">Register</a></div>
+                                    <div style="text-align: center">Already have an account?... <a href="/user-auth/">Login</a></div>
                                 </form>
                             </div>
                         </div>

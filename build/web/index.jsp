@@ -1,7 +1,7 @@
 <%@page contentType="text/html" import="java.sql.*"%>
 <%if (request.getParameter("btn") != null) {
         Connection c = DriverManager.getConnection("jdbc:mysql://localhost:3306/test", "root", "");
-        PreparedStatement ps = c.prepareStatement("SELECT * FROM `user` WHERE username = ? and password = ?");
+        PreparedStatement ps = c.prepareStatement("SELECT * FROM `user` WHERE email = ? and password = ?");
 
         ps.setString(1, request.getParameter("userEmail"));
         ps.setString(2, request.getParameter("userPass"));
@@ -9,7 +9,8 @@
         if (!rs.next()) {
             out.print("Login Failed!!");
         } else {
-            out.print("Login Successful");
+            rs.absolute(1);
+            out.println("Welcome " + rs.getString("name"));
         }
 }%>
 <!DOCTYPE hdl>
@@ -24,12 +25,6 @@
         <title>
             Simple JSP Login
         </title>
-        <link
-            rel="shortcut icon"
-            href="./static/img/favicon.png"
-            type="image/x-icon"
-            />
-        <link rel="apple-touch-icon" href="./static/img/favicon.png" />
         <link rel="stylesheet" href="./static/css/bootstrap.min.css" />
         <link
             href="./static/font/ionicons/css/ionicons.min.css"
@@ -107,6 +102,7 @@
                                             Login
                                         </button>
                                     </div>
+                                    <div style="text-align: center">Don't have an account?... <a href="/user-auth/register.jsp">Register</a></div>
                                 </form>
                             </div>
                         </div>
